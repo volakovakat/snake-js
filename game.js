@@ -11,6 +11,11 @@ let snakePosY = canvas.height / 2;
 let velocityX = 0;
 let velocityY = 0;
 
+//food
+let foodPosX = 0;
+let foodPosY = 0;
+
+
 const tileCountX = canvas.width / snakeSize;
 const tileCountY = canvas.height / snakeSize;
 
@@ -23,6 +28,7 @@ function gameLoop() {
     moveStuff()
     setTimeout(gameLoop, 1000 / 15);
 }
+resetFood();
 gameLoop();
 
 //move everything
@@ -30,6 +36,7 @@ function moveStuff() {
     snakePosX += snakeSpeed * velocityX;
     snakePosY += snakeSpeed * velocityY;
 
+    //wall collision
     if (snakePosX > (canvas.width - snakeSize)) {
         snakePosX = 0;
     }
@@ -42,16 +49,26 @@ function moveStuff() {
     if (snakePosY < 0) {
         snakePosY = canvas.height;
     }
+
+    //food collision
+    if (snakePosX === foodPosX && snakePosY === foodPosY) {
+        resetFood();
+    }
 }
 
 //draw everything
 function drawStuff() {
     //background
     rectangle('#efc93f', 0, 0, canvas.width, canvas.height);
+
     //grid
     drawGrid();
+
     //snake
     rectangle('green', snakePosX, snakePosY, snakeSize, snakeSize);
+
+    //food
+    rectangle('blue', foodPosX, foodPosY, snakeSize, snakeSize);
 }
 
 //draw rectangle
@@ -103,5 +120,11 @@ function drawGrid() {
             );
         }
     }
+}
+
+//randomize food position
+function resetFood() {
+    foodPosX = Math.floor(Math.random() * tileCountX) * snakeSize;
+    foodPosY = Math.floor(Math.random() * tileCountY) * snakeSize;
 }
 
