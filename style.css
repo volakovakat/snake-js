@@ -6,3 +6,11 @@ body {
 canvas {
     border: 10px solid rgb(255, 93, 93);
 }
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 4em;
+    letter-spacing: -10px;
+    margin-top: 0.2em;
+}

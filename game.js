@@ -1,5 +1,6 @@
 //canvas
 const canvas = document.querySelector('canvas');
+const title = document.querySelector('h1');
 const context = canvas.getContext('2d');
 
 //player
@@ -15,18 +16,21 @@ let velocityY = 0;
 let foodPosX = 0;
 let foodPosY = 0;
 
-
+//game
 const tileCountX = canvas.width / snakeSize;
 const tileCountY = canvas.height / snakeSize;
+
+let score = 0;
+const fps = 10;
 
 //listeners
 document.addEventListener('keydown', keyPush);
 
-
+//loop
 function gameLoop() {
     drawStuff()
     moveStuff()
-    setTimeout(gameLoop, 1000 / 15);
+    setTimeout(gameLoop, 1000 / fps);
 }
 resetFood();
 gameLoop();
@@ -52,6 +56,7 @@ function moveStuff() {
 
     //food collision
     if (snakePosX === foodPosX && snakePosY === foodPosY) {
+        title.textContent = ++score;
         resetFood();
     }
 }
