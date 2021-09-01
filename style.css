@@ -1,0 +1,8 @@
+body {
+    background-color: #efc93f;
+    text-align: center;
+}
+
+canvas {
+    border: 10px solid rgb(255, 93, 93);
+}
