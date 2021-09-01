@@ -3,12 +3,15 @@ const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 //player
 const snakeSize = 50;
-let snakeSpeed = 5;
+let snakeSpeed = 50;
 let snakePosX = 0;
 let snakePosY = canvas.height / 2 - snakeSize / 2;
 
 let velocityX = 0;
 let velocityY = 0;
+
+const tileCountX = canvas.width / snakeSize;
+const tileCountY = canvas.height / snakeSize;
 
 //listeners
 document.addEventListener('keydown', keyPush);
@@ -17,7 +20,7 @@ document.addEventListener('keydown', keyPush);
 function gameLoop() {
     drawStuff()
     moveStuff()
-    requestAnimationFrame(gameLoop);
+    setTimeout(gameLoop, 1000 / 15);
 }
 gameLoop();
 
@@ -42,8 +45,12 @@ function moveStuff() {
 
 //draw everything
 function drawStuff() {
-    rectangle('white', 0, 0, canvas.width, canvas.height)
-    rectangle('green', snakePosX, snakePosY, snakeSize, snakeSize) 
+    //background
+    rectangle('#efc93f', 0, 0, canvas.width, canvas.height);
+    //grid
+    drawGrid();
+    //snake
+    rectangle('green', snakePosX, snakePosY, snakeSize, snakeSize);
 }
 
 //draw rectangle
@@ -81,6 +88,19 @@ function keyPush(event) {
             break;
     }
 }
-    
 
+//grid
+function drawGrid() {
+    for (let i=0; i < tileCountX; i++) {
+        for (let j=0; j < tileCountY; j++) {
+            rectangle(
+                '#fff',
+                snakeSize * i,
+                snakeSize * j,
+                snakeSize - 1,
+                snakeSize - 1
+            );
+        }
+    }
+}
 
