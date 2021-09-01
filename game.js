@@ -29,13 +29,13 @@ function moveStuff() {
     if (snakePosX > canvas.width) {
         snakePosX = 0;
     }
-    if (snakePosX < 0) {
+    if (snakePosX < -snakeSize) {
         snakePosX = canvas.width;
     }
     if (snakePosY > canvas.height) {
         snakePosY = 0;
     }
-    if (snakePosY < 0) {
+    if (snakePosY < -snakeSize) {
         snakePosY = canvas.height;
     }
 }
@@ -56,20 +56,28 @@ function rectangle(color, x, y, width, height) {
 function keyPush(event) {
     switch(event.key) {
         case 'ArrowLeft':
-            velocityX = -1;
-            velocityY = 0;
+            if(velocityX !== 1) {
+                velocityX = -1;
+                velocityY = 0;
+            }
             break;
         case 'ArrowUp':
-            velocityX = 0;
-            velocityY = -1;
+            if(velocityY !== 1) {
+                velocityX = 0;
+                velocityY = -1;
+            }
             break;
         case 'ArrowRight':
-            velocityX = 1;
-            velocityY = 0;
+            if(velocityX !== -1) {
+                velocityX = 1;
+                velocityY = 0;
+            }
             break;
         case 'ArrowDown':
-            velocityX = 0;
-            velocityY = 1;
+            if(velocityY !== -1) {
+                velocityX = 0;
+                velocityY = 1;
+            }
             break;
     }
 }
