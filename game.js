@@ -4,6 +4,8 @@ const title = document.querySelector('h1');
 const context = canvas.getContext('2d');
 
 //game
+let gameIsRunning = true;
+
 const fps = 10;
 const tileSize = 50;
 
@@ -17,11 +19,11 @@ let snakeSpeed = tileSize;
 let snakePosX = 0;
 let snakePosY = canvas.height / 2;
 
-let velocityX = 0;
+let velocityX = 1;
 let velocityY = 0;
 
 let tail = [];
-let snakeLength = 2;
+let snakeLength = 4;
 
 //food
 let foodPosX = 0;
@@ -32,9 +34,11 @@ document.addEventListener('keydown', keyPush);
 
 //loop
 function gameLoop() {
-    drawStuff()
-    moveStuff()
-    setTimeout(gameLoop, 1000 / fps);
+    if (gameIsRunning) {
+        drawStuff()
+        moveStuff()
+        setTimeout(gameLoop, 1000 / fps);
+    }
 }
 resetFood();
 gameLoop();
@@ -58,11 +62,19 @@ function moveStuff() {
         snakePosY = canvas.height;
     }
 
+    //GAME OVER
+    //Keyboard restarts game
+    tail.forEach((snakePart) => {
+        if (snakePosX === snakePart.x && snakePosY === snakePart.y) {
+            gameOver();
+        }
+    } );
+
     //tail 
-    tail.push({ x: snakePosX, y: snakePosY })
+    tail.push({ x: snakePosX, y: snakePosY });
 
     //forget earliest parts of snake
-    tail = tail.slice(-1 * snakeLength)
+    tail = tail.slice(-1 * snakeLength);
 
     //food collision
     if (snakePosX === foodPosX && snakePosY === foodPosY) {
@@ -75,19 +87,20 @@ function moveStuff() {
 //draw everything
 function drawStuff() {
     //background
-    rectangle('#efc93f', 0, 0, canvas.width, canvas.height);
+    rectangle('#0c8f94', 0, 0, canvas.width, canvas.height);
 
     //grid
     drawGrid();
 
+    //tail
+    tail.forEach((snakePart) => rectangle('#629553', snakePart.x, snakePart.y, tileSize, tileSize));
+
     //snake
-    rectangle('green', snakePosX, snakePosY, tileSize, tileSize);
+    rectangle('#3c7b29', snakePosX, snakePosY, tileSize, tileSize);
 
     //food
-    rectangle('blue', foodPosX, foodPosY, tileSize, tileSize);
+    rectangle('#ffa500', foodPosX, foodPosY, tileSize, tileSize);
 
-    //tail
-    tail.forEach((snakePart) => rectangle('greenyellow', snakePart.x, snakePart.y, tileSize, tileSize));
 }
 
 //draw rectangle
@@ -123,6 +136,12 @@ function keyPush(event) {
                 velocityY = 1;
             }
             break;
+            default:
+                //restart game
+                if (! gameIsRunning) {
+                    location.reload();
+                }
+                break
     }
 }
 
@@ -143,7 +162,26 @@ function drawGrid() {
 
 //randomize food position
 function resetFood() {
+    if ( snakeLength === tileCountX * tileCountY) {
+        gameOver();
+    }
+
     foodPosX = Math.floor(Math.random() * tileCountX) * tileSize;
     foodPosY = Math.floor(Math.random() * tileCountY) * tileSize;
+    //don't spawn food on snakes head
+    if (foodPosX === snakePosX && foodPosY === snakePosY) {
+       resetFood();
+    }
+
+    //don't spawn food on any snake part
+    if (tail.some(snakePart => snakePart.x === foodPosX && snakePart.y === foodPosY)) {
+        resetFood();
+    }
+}
+
+//game over
+function gameOver() {
+    title.innerHTML = `<strong>GAME OVER!</br>Score: ${score}</strong>`
+            gameIsRunning = false;
 }
 
